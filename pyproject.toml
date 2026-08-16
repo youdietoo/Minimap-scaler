@@ -1,0 +1,9 @@
+[projects]
+name = "Minimap scaler"
+version = "1.0"
+authors = [{ name = "youdietoo" }]
+description = "Set minimap widget scale and zoom level."
+
+[tool.sdkmod]
+name = "Minimap scaler"
+license = {name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
