@@ -107,6 +107,45 @@ def resize_minimap_world_radius(minimap):
     last_radius_minimap = minimap
     last_radius = radius
 
+def resize_gfx_clip(clip, scale):
+    if clip is None:
+        return
+
+    info = get_display_info(clip)
+
+    if info is None:
+        return
+
+    info.XScale = scale
+    info.YScale = scale
+    info.hasXScale = True
+    info.hasYScale = True
+
+    try:
+        clip.SetDisplayInfo(info)
+    except Exception as e:
+        print(f"GFx SCALE ERROR {clip}: {e}")
+
+def resize_minimap_elements(minimap):
+    widget_scale = float(minimap_scale.value)
+
+    inverse_scale = 10000.0 / widget_scale
+
+    clips = [
+        "DirArrowClip",
+        "NorthMarkerClip",
+    ]
+
+    for name in clips:
+        try:
+            clip = getattr(minimap, name)
+
+            if clip is not None:
+                resize_gfx_clip(clip, inverse_scale)
+
+        except Exception as e:
+            print(f"RESIZE MINIMAP ELEMENT ERROR ({name}): {e}")
+            pass
 
 def update_minimap(hud):
     try:
@@ -119,6 +158,7 @@ def update_minimap(hud):
 
     resize_minimap_widget(minimap)
     resize_minimap_world_radius(minimap)
+    resize_minimap_elements(minimap)
 
 @hook("WillowGame.WillowHUD:OpenHUDMovie", Type.POST)
 def open_hud_movie(obj: UObject, _args: WrappedStruct, _ret, _func: BoundFunction):
